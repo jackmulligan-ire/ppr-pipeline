@@ -1,8 +1,11 @@
 FROM ubuntu:latest
 
-RUN pip install boto3
+RUN apt-get update && apt-get -y install pip python-is-python3
+RUN pip install requests boto3
 
-COPY aws_credentials .aws/credentials
-COPY ppr_pipleine/ ppr_pipleine/
+COPY aws_credentials root/.aws/credentials
+COPY ppr_pipeline/ home/ppr_pipeline/
 
-ENTRYPOINT ["python", "-m ppr_pipleine"]
+WORKDIR home/
+
+ENTRYPOINT ["python", "-m" , "ppr_pipeline"]
