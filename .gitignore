@@ -3,3 +3,4 @@ tmp/
 aws_credentials
 *.txt
 *.sql
+.DS_Store
