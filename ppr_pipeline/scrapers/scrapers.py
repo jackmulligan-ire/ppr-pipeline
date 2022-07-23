@@ -2,9 +2,13 @@
 import requests
 from zipfile import ZipFile
 from io import BytesIO
+import csv
 
 # Third-party libs
 import boto3
+
+# App modules
+import ppr_pipeline
 
 class PPR_Hist_Scraper():
     @classmethod
@@ -29,4 +33,4 @@ class PPR_Hist_Scraper():
     @classmethod
     def _upload_csv_to_s3(cls, csv_data):
         s3_client = boto3.client('s3')
-        s3_client.upload_fileobj(csv_data, 'ppr-pipeline', 'PPR-ALL.csv')
+        s3_client.upload_fileobj(csv_data, ppr_pipeline.BUCKET_NAME, ppr_pipeline.ALL_OBJECT_NAME)
