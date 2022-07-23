@@ -5,3 +5,4 @@ aws_credentials
 *.sql
 .DS_Store
 test-data/
+.env
