@@ -1,5 +1,6 @@
 __pycache__*
 tmp/
+logs/
 aws_credentials
 *.txt
 *.sql

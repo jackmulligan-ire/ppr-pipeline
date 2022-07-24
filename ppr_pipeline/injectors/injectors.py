@@ -1,10 +1,12 @@
 import csv
 import os
+from datetime import datetime
 
 # Third-party libs
 import boto3
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from psycopg2.errors import UniqueViolation
 
 # App modules
 import ppr_pipeline
@@ -13,8 +15,8 @@ from ppr_pipeline.injectors.orm_classes import Property_Transaction_Staging
 class PPR_Hist_Injector():
     @classmethod
     def inject_ppr_data(cls):
-        cls._get_all_from_s3()
-        ppr_data = cls._generate_iter_from_csv('tmp/PPR-ALL.csv')
+       #cls._get_all_from_s3()
+        ppr_data = cls._generate_iter_from_csv('tmp/PPR-Next-five-and-dupe.csv')
         cls._inject_data_to_staging(ppr_data)
 
     @classmethod
@@ -41,16 +43,37 @@ class PPR_Hist_Injector():
         
         with Session(engine) as session:
             for data in ppr_rows:
-                prop_trans = Property_Transaction_Staging(
-                    address = data['Address'],
-                    county = data['County'],
-                    eircode = data['Eircode'],
-                    price = data['Price (�)'],
-                    not_full_market_price = data['Not Full Market Price'],
-                    vat_exclusive = data['VAT Exclusive'],
-                    description_of_property = data['Description of Property'],
-                    property_size_description = data['Property Size Description'],
-                    date_of_sale = data['Date of Sale (dd/mm/yyyy)']
-                )
-                session.add(prop_trans)
-                session.commit()
+                try:
+                    prop_trans = Property_Transaction_Staging(
+                        address = data['Address'],
+                        county = data['County'],
+                        eircode = data['Eircode'],
+                        price = data['Price (�)'],
+                        not_full_market_price = data['Not Full Market Price'],
+                        vat_exclusive = data['VAT Exclusive'],
+                        description_of_property = data['Description of Property'],
+                        property_size_description = data['Property Size Description'],
+                        date_of_sale = data['Date of Sale (dd/mm/yyyy)']
+                    )
+                    session.add(prop_trans)
+                    session.commit()
+                except Exception as e:
+                    with open('logs/staging-table-error.csv', 'a') as csv_file:
+                        writer = csv.writer(csv_file)
+
+                        if os.path.getsize('logs/staging-table-error.csv') == 0:
+                            writer.writerow([
+                                'time_of_error',
+                                'error',
+                                'Date of Sale (dd/mm/yyyy)',
+                                'Address',
+                                'Price (�)',
+                            ])
+                        writer.writerow([
+                            datetime.now().strftime("%d%m%y-%H:%M"),
+                            e,
+                            data['Date of Sale (dd/mm/yyyy)'],
+                            data['Address'],
+                            data['Price (�)'],
+                        ])
+                    session.rollback()
