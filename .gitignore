@@ -7,3 +7,4 @@ aws_credentials
 .DS_Store
 test-data/
 .env
+.vscode
