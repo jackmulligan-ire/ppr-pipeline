@@ -6,29 +6,33 @@ from datetime import datetime
 import boto3
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from psycopg2.errors import UniqueViolation
 
 # App modules
 import ppr_pipeline
 from ppr_pipeline.injectors.orm_classes import Property_Transaction_Staging
 
 class PPR_Hist_Injector():
+    PPR_ALL_FILEPATH = 'tmp/PPR-ALL.csv'
+
     @classmethod
     def inject_ppr_data(cls):
-       #cls._get_all_from_s3()
-        ppr_data = cls._generate_iter_from_csv('tmp/PPR-Next-five-and-dupe.csv')
+        #cls._get_all_from_s3()
+        ppr_data = cls._generate_iter_from_csv(cls.PPR_ALL_FILEPATH)
         cls._inject_data_to_staging(ppr_data)
 
     @classmethod
     def _get_all_from_s3(cls):
         s3 = boto3.client('s3')
-        s3.download_file(ppr_pipeline.BUCKET_NAME, ppr_pipeline.ALL_OBJECT_NAME, 'tmp/PPR-ALL.csv')
+        s3.download_file(ppr_pipeline.BUCKET_NAME, ppr_pipeline.ALL_OBJECT_NAME, cls.PPR_ALL_FILEPATH)
 
     @classmethod
     def _generate_iter_from_csv(cls, filename):
-        with open(filename) as csv_file:
-            reader = csv.DictReader(csv_file)
-            return [row for row in reader]
+        try:
+            with open(filename) as csv_file:
+                reader = csv.DictReader(csv_file)
+                return [row for row in reader]
+        except FileNotFoundError:
+            raise Exception("PPR_All file doesn't exist. Has it been downloaded?")
 
     @classmethod
     def _inject_data_to_staging(cls, ppr_rows):
