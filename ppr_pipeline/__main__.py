@@ -1,9 +1,12 @@
 import sys
+from dotenv import load_dotenv
 
 from ppr_pipeline.scrapers.scrapers import PPR_Hist_Scraper
 from ppr_pipeline.injectors.injectors import PPR_Hist_Injector
 
 def main(): 
+    load_dotenv()
+
     if sys.argv[1] == "scrape_all":
         PPR_Hist_Scraper.upload_hist_data()
     elif sys.argv[1] == "inject_all":

@@ -1,6 +1,9 @@
 import unittest
 import os
 from unittest.mock import patch, call
+
+from dotenv import load_dotenv
+
 from ppr_pipeline.injectors.injectors import PPR_Hist_Injector
 
 class TestInjectors(unittest.TestCase):
@@ -26,6 +29,8 @@ class TestInjectors(unittest.TestCase):
         self.assertEqual(PPR_iter_result, PPR_iter_data)
 
     def test_create_engine(self):
+        load_dotenv()
+
         USER = os.environ.get('DB_USER')
         PASSWORD = os.environ.get('DB_PASSWORD')
         HOST = os.environ.get('DB_HOST')
@@ -102,6 +107,38 @@ class TestInjectors(unittest.TestCase):
                     date_of_sale = PPR_iter_data[1]['Date of Sale (dd/mm/yyyy)']
                 )
             ])
+    
+    def test_clean_euro_sign(self):
+        PPR_dirty_data = [{
+            'Date of Sale (dd/mm/yyyy)': '01/01/2010',
+            'Address' : '5 Braemor Drive, Churchtown, Co.Dublin',
+            'County' : 'Dublin',
+            'Eircode' : '',
+            'Price (�)' : '�343,000.00',
+            'Not Full Market Price' : 'No',
+            'VAT Exclusive' : 'No',
+            'Description of Property' : 'Second-Hand Dwelling house /Apartment',
+            'Property Size Description': ''
+            }]
+
+        PPR_clean_data = {
+            'Date of Sale (dd/mm/yyyy)': '01/01/2010',
+            'Address' : '5 Braemor Drive, Churchtown, Co.Dublin',
+            'County' : 'Dublin',
+            'Eircode' : '',
+            'Price' : '343,000.00',
+            'Not Full Market Price' : 'No',
+            'VAT Exclusive' : 'No',
+            'Description of Property' : 'Second-Hand Dwelling house /Apartment',
+            'Property Size Description': ''
+        }
+
+        with patch('ppr_pipeline.injectors.injectors.csv.DictReader') as mock_reader:
+                mock_reader.return_value = PPR_dirty_data
+                with patch('ppr_pipeline.injectors.injectors.csv.DictWriter') as mock_writer:
+                    instance = mock_writer.return_value
+                    PPR_Hist_Injector._clean_csv_of_euro()
+                    instance.writerow.assert_called_once_with(PPR_clean_data)
 
 if __name__ == '__main__':
     unittest.main()
