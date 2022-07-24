@@ -18,9 +18,9 @@ class PPR_Hist_Injector():
 
     @classmethod
     def inject_ppr_data(cls):
-        #if not os.path.exists(cls.PPR_ALL_DIRTY_FILEPATH):
-            #cls._get_all_from_s3()
-        cls._clean_csv_of_euro()
+        if not os.path.exists(cls.PPR_ALL_DIRTY_FILEPATH):
+            cls._get_all_from_s3()
+            cls._clean_csv_of_euro()
         ppr_data = cls._generate_iter_from_csv(cls.PPR_ALL_CLEAN_FILEPATH)
         cls._inject_data_to_staging(ppr_data)
 
@@ -31,7 +31,7 @@ class PPR_Hist_Injector():
 
     @classmethod
     def _clean_csv_of_euro(cls):
-        with open(cls.PPR_ALL_DIRTY_FILEPATH, 'r') as dirty_file, open(cls.PPR_ALL_CLEAN_FILEPATH, 'a') as clean_file:
+        with open(cls.PPR_ALL_DIRTY_FILEPATH, 'r', encoding='windows-1252') as dirty_file, open(cls.PPR_ALL_CLEAN_FILEPATH, 'a') as clean_file:
             fieldnames = [
                 'Date of Sale (dd/mm/yyyy)',
                 'Address',
@@ -44,17 +44,17 @@ class PPR_Hist_Injector():
                 'Property Size Description',
             ]
             
-            reader = csv.DictReader(dirty_file, fieldnames=fieldnames)
+            reader = csv.DictReader(dirty_file)
             writer = csv.DictWriter(clean_file, fieldnames=fieldnames)
-
+            
             if os.path.getsize(cls.PPR_ALL_CLEAN_FILEPATH) == 0:
                 writer.writeheader()
             
             for row in reader:
                 clean_row = {}
                 for key in row.keys():
-                    if key == 'Price (�)':
-                        row[key] = row[key].replace('�', '')
+                    if key == 'Price (€)':
+                        row[key] = row[key].replace('€', '')
                         clean_row['Price'] = row[key]
                     else:
                         clean_row[key] = row[key]
@@ -87,7 +87,7 @@ class PPR_Hist_Injector():
                         address = data['Address'],
                         county = data['County'],
                         eircode = data['Eircode'],
-                        price = data['Price (�)'],
+                        price = data['Price'],
                         not_full_market_price = data['Not Full Market Price'],
                         vat_exclusive = data['VAT Exclusive'],
                         description_of_property = data['Description of Property'],
@@ -113,6 +113,6 @@ class PPR_Hist_Injector():
                             e,
                             data['Date of Sale (dd/mm/yyyy)'],
                             data['Address'],
-                            data['Price (�)'],
+                            data['Price'],
                         ])
                     session.rollback()
