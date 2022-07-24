@@ -134,11 +134,11 @@ class TestInjectors(unittest.TestCase):
         }
 
         with patch('ppr_pipeline.injectors.injectors.csv.DictReader') as mock_reader:
-                mock_reader.return_value = PPR_dirty_data
-                with patch('ppr_pipeline.injectors.injectors.csv.DictWriter') as mock_writer:
-                    instance = mock_writer.return_value
-                    PPR_Hist_Injector._clean_csv_of_euro()
-                    instance.writerow.assert_called_once_with(PPR_clean_data)
+            mock_reader.return_value = PPR_dirty_data
+            with patch('ppr_pipeline.injectors.injectors.csv.DictWriter') as mock_writer:
+                instance = mock_writer.return_value
+                PPR_Hist_Injector._clean_csv_of_euro()
+                instance.writerow.assert_called_once_with(PPR_clean_data)
 
 if __name__ == '__main__':
     unittest.main()
