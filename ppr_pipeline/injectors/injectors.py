@@ -16,7 +16,8 @@ class PPR_Hist_Injector():
 
     @classmethod
     def inject_ppr_data(cls):
-        #cls._get_all_from_s3()
+        if not os.path.exists(cls.PPR_ALL_FILEPATH):
+            cls._get_all_from_s3()
         ppr_data = cls._generate_iter_from_csv(cls.PPR_ALL_FILEPATH)
         cls._inject_data_to_staging(ppr_data)
 
@@ -28,7 +29,7 @@ class PPR_Hist_Injector():
     @classmethod
     def _generate_iter_from_csv(cls, filename):
         try:
-            with open(filename) as csv_file:
+            with open(filename, 'rb') as csv_file:
                 reader = csv.DictReader(csv_file)
                 return [row for row in reader]
         except FileNotFoundError:
