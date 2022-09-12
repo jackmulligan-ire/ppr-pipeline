@@ -3,7 +3,7 @@ tmp/
 logs/
 aws_credentials
 *.txt
-*.sql
+backup.sql
 .DS_Store
 test-data/
 .env
