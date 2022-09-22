@@ -8,3 +8,4 @@ backup.sql
 test-data/
 .env
 .vscode
+pg-database.Dockerfile

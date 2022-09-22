@@ -1,0 +1,8 @@
+version: "0.1"
+services:
+  pg-database:
+    image: "jackmulliganire/pg-database"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./sql/backup.sql:/docker-entrypoint-initdb.d/backup.sql
