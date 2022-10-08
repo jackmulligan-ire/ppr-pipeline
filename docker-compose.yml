@@ -17,7 +17,3 @@ services:
     ports:
       - "8080:80"
     profiles: ["local"]
-  metabase:
-    image: metabase/metabase
-    ports:
-      - "3000:3000"
