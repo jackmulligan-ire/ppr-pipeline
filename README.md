@@ -8,7 +8,7 @@
 <h3 align="center">PPR House</h3>
 
   <p align="center">
-   The Irish Property Price Register in a data warehouse.
+   The Irish Property Price Register in a data warehouse and associated platform for data analysis.
   </p>
 </div>
 
