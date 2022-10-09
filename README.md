@@ -8,7 +8,7 @@
 <h3 align="center">PPR House</h3>
 
   <p align="center">
-   The Irish Property Price Register in a data warehouse and associated platform for data analysis.
+   Data warehouse for the Property Price Register and associated platform.
   </p>
 </div>
 
@@ -21,7 +21,7 @@ The primary motivation behind this project is to allow people to more easily per
 Below is an impression of how rolling analysis of property prices via the PPR could look like, showing changes in property prices over time for each province (example generated in Metabase):
 
 <div align="center">
- <img src="readme-images/prices-by-province.png" alt="Prices by Province" height=250 width=600>
+ <img src="readme-images/prices-by-province.png" alt="Prices by Province" height=400 width=950>
 </div>
 
 <br />
@@ -67,7 +67,7 @@ It's also possible to query the website of the Property Price Register and creat
 - [Generate credentials](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html) to connect to your AWS on your local machine.
 - Save the credentials generated to a `~/.aws/credentials` file. This should contain `aws_access_key_id` and `aws_secret_access_key` fields.
 - Navigate into your copy of the repo and run `mkdir tmp logs`. These directories are required to convert data and log errors but are listed under `.gitignore` to prevent unnecessary data from being uploaded.
-- Stand up the database using the `backup-clean.sql` file. This can also be done using `docker-compose`.yml by changing the reference in `volumes` from `backup-sql` to `backup-clean.sql` This will generate empty data warehouse tables.
+- Stand up the database using the `backup-clean.sql` file. This can also be done using `docker-compose.yml` by changing the reference in `volumes` from `backup-sql` to `backup-clean.sql` This will generate empty data warehouse tables.
 - Run `python -m ppr_pipeline scrape_all` to query the latest data from the Property Price Register and inject the latest data into your S3 bucket.
 - Run `python -m ppr_pipeline inject_all` to query the S3 bucket and inject the data there into your SQL database.
 - Finally, open a SQL dashboard and run all non-backup files in the sql folder as queries. This will provide the necessary functions required for transformation and transform the data in staging into the data warehouse tables.
@@ -139,3 +139,4 @@ Schema: `property_key, property_build_type, property_market_price, property_vat_
 
 - Icon credit: https://github.com/alexandresanlim/Badges4-README.md-Profile
 - README template credit: https://github.com/othneildrew/Best-README-Template
+- [DataTalks Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp)
