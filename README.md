@@ -8,7 +8,7 @@
 <h3 align="center">PPR House</h3>
 
   <p align="center">
-   Data warehouse for the Property Price Register and associated platform.
+   Data warehouse for the Property Price Register created via an EtLT pipeline.
   </p>
 </div>
 
