@@ -2,7 +2,6 @@ __pycache__*
 tmp/
 logs/
 aws_credentials
-*.txt
 .DS_Store
 test-data/
 .env
