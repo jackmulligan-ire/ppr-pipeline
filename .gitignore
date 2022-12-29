@@ -8,3 +8,5 @@ test-data/
 .env
 .vscode
 dockerfiles
+target/
+.idea
