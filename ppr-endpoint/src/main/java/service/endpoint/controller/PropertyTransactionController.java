@@ -27,4 +27,14 @@ public class PropertyTransactionController {
     propertyTransactionRepository.findAll().forEach(propertyTransactions::add);
     return new ResponseEntity<>(propertyTransactions, HttpStatus.OK);
   }
+
+  @GetMapping("/property-transactions-limit")
+  public ResponseEntity<List<PropertyTransaction>> getLimitedPropertyTransactions() {
+    List<PropertyTransaction> propertyTransactions = new ArrayList<>();
+    List<PropertyTransaction> allPropertyTransactions = propertyTransactionRepository.findAll();
+    for (int i = 0; i <= 10; i++) {
+      propertyTransactions.add(allPropertyTransactions.get(i));
+    }
+    return new ResponseEntity<>(propertyTransactions, HttpStatus.OK);
+  }
 }
