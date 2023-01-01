@@ -1,7 +1,6 @@
 package service.endpoint.model;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Entity
 @Table(name = "fact_property_transactions")
@@ -11,15 +10,17 @@ public class PropertyTransaction {
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "date_key")
-  private Date dateKey;
+  @ManyToOne
+  @JoinColumn(name = "date_key")
+  private DateDetails dateDetails;
 
   @ManyToOne
   @JoinColumn(name = "location_key")
   private Location location;
 
-  @Column(name = "property_key")
-  private int propertyKey;
+  @ManyToOne
+  @JoinColumn(name = "property_key")
+  private PropertyDetails propertyDetails;
 
   @Column(name = "transaction_price")
   private float transactionPrice;
@@ -27,20 +28,20 @@ public class PropertyTransaction {
   public PropertyTransaction() {
   }
 
-  public PropertyTransaction(Long id, Date dateKey, Location location, int propertyKey, float transactionPrice) {
+  public PropertyTransaction(Long id, DateDetails dateDetails, Location location, PropertyDetails propertyDetails, float transactionPrice) {
     this.id = id;
-    this.dateKey = dateKey;
+    this.dateDetails = dateDetails;
     this.location = location;
-    this.propertyKey = propertyKey;
+    this.propertyDetails = propertyDetails;
     this.transactionPrice = transactionPrice;
   }
 
-  public Date getDateKey() {
-    return dateKey;
+  public DateDetails getDateDetails() {
+    return dateDetails;
   }
 
-  public void setDateKey(Date dateKey) {
-    this.dateKey = dateKey;
+  public void setDateDetails(DateDetails dateDetails) {
+    this.dateDetails = dateDetails;
   }
 
   public Location getLocation() {
@@ -51,12 +52,12 @@ public class PropertyTransaction {
     this.location = location;
   }
 
-  public int getPropertyKey() {
-    return propertyKey;
+  public PropertyDetails getPropertyDetails() {
+    return propertyDetails;
   }
 
-  public void setPropertyKey(int propertyKey) {
-    this.propertyKey = propertyKey;
+  public void setPropertyDetails(PropertyDetails propertyDetails) {
+    this.propertyDetails = propertyDetails;
   }
 
   public float getTransactionPrice() {

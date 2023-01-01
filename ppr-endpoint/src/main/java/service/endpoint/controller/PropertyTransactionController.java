@@ -32,7 +32,7 @@ public class PropertyTransactionController {
   public ResponseEntity<List<PropertyTransaction>> getLimitedPropertyTransactions() {
     List<PropertyTransaction> propertyTransactions = new ArrayList<>();
     List<PropertyTransaction> allPropertyTransactions = propertyTransactionRepository.findAll();
-    for (int i = 0; i <= 10; i++) {
+    for (int i = 0; i <= 100; i++) {
       propertyTransactions.add(allPropertyTransactions.get(i));
     }
     return new ResponseEntity<>(propertyTransactions, HttpStatus.OK);
