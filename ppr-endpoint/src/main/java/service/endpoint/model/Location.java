@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class Location {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "location_key")
   Long id;
 
   @Column(name="location_county")
