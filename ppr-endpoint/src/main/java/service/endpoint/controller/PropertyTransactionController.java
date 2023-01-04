@@ -4,10 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import service.endpoint.model.PropertyTransaction;
 import service.endpoint.repository.PropertyTransactionRepository;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,19 +24,10 @@ public class PropertyTransactionController {
   }
 
   @GetMapping("/property-transactions")
-  public ResponseEntity<List<PropertyTransaction>> getAllPropertyTransactions() {
+  public ResponseEntity<List<PropertyTransaction>> getPropertyTransactions(@RequestParam(required = false) Date dateAfter) {
     List<PropertyTransaction> propertyTransactions = new ArrayList<>();
-    propertyTransactionRepository.findAll().forEach(propertyTransactions::add);
-    return new ResponseEntity<>(propertyTransactions, HttpStatus.OK);
-  }
-
-  @GetMapping("/property-transactions-limit")
-  public ResponseEntity<List<PropertyTransaction>> getLimitedPropertyTransactions() {
-    List<PropertyTransaction> propertyTransactions = new ArrayList<>();
-    List<PropertyTransaction> allPropertyTransactions = propertyTransactionRepository.findAll();
-    for (int i = 0; i <= 100; i++) {
-      propertyTransactions.add(allPropertyTransactions.get(i));
-    }
+    if (dateAfter != null) propertyTransactionRepository.findByDateDetails_DateAfter(dateAfter).forEach(propertyTransactions::add);
+    else propertyTransactionRepository.findAll().forEach(propertyTransactions::add);
     return new ResponseEntity<>(propertyTransactions, HttpStatus.OK);
   }
 }
