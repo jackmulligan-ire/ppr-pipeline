@@ -13,19 +13,15 @@ public class Location {
   @Column(name="location_county")
   String county;
 
-  @Column(name="location_nuts_3")
-  String nuts3;
-
   @Column(name="location_province")
   String province;
 
   public Location() {
   }
 
-  public Location(Long id, String county, String nuts3, String province) {
+  public Location(Long id, String county, String province) {
     this.id = id;
     this.county = county;
-    this.nuts3 = nuts3;
     this.province = province;
   }
 
@@ -35,14 +31,6 @@ public class Location {
 
   public void setCounty(String county) {
     this.county = county;
-  }
-
-  public String getNuts3() {
-    return nuts3;
-  }
-
-  public void setNuts3(String nuts3) {
-    this.nuts3 = nuts3;
   }
 
   public String getProvince() {

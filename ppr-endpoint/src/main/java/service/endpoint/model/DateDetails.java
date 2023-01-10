@@ -23,11 +23,8 @@ public class DateDetails {
   public DateDetails() {
   }
 
-  public DateDetails(Date date, Integer month, Integer quarter, Integer year) {
+  public DateDetails(Date date) {
     this.date = date;
-    this.month = month;
-    this.quarter = quarter;
-    this.year = year;
   }
 
   public Date getDate() {
@@ -38,27 +35,4 @@ public class DateDetails {
     this.date = date;
   }
 
-  public Integer getMonth() {
-    return month;
-  }
-
-  public void setMonth(Integer month) {
-    this.month = month;
-  }
-
-  public Integer getQuarter() {
-    return quarter;
-  }
-
-  public void setQuarter(Integer quarter) {
-    this.quarter = quarter;
-  }
-
-  public Integer getYear() {
-    return year;
-  }
-
-  public void setYear(Integer year) {
-    this.year = year;
-  }
 }
