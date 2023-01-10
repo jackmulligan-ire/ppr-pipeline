@@ -51,14 +51,18 @@ public class PropertyTransactionControllerTest {
           new PropertyDetails(2L, "New Dwelling house /Apartment"),
           257709.25F);
 
+  List<PropertyTransaction> TRANSACTIONS = new ArrayList<>(Arrays.asList(RECORD_1, RECORD_2));
+
+  String ENDPOINT = "/api/property-transactions";
+
   @Test
   public void getAllTransactions_success() throws Exception {
-    List<PropertyTransaction> transactions = new ArrayList<>(Arrays.asList(RECORD_1, RECORD_2));
 
-    Mockito.when(propertyTransactionRepository.findAll()).thenReturn(transactions);
+
+    Mockito.when(propertyTransactionRepository.findAll()).thenReturn(TRANSACTIONS);
 
     mockMvc.perform(MockMvcRequestBuilders
-            .get("/api/property-transactions")
+            .get(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
@@ -69,6 +73,76 @@ public class PropertyTransactionControllerTest {
             .andExpect(jsonPath("$[0].transactionPrice", is(157709.25)));
   }
 
+  @Test
+  public void getTransactionsAfterDate_success() throws Exception {
+    Mockito
+            .when(propertyTransactionRepository.findByDateDetails_DateAfter(Date.valueOf("2022-12-31")))
+            .thenReturn(TRANSACTIONS);
 
+    mockMvc.perform(MockMvcRequestBuilders
+            .get(ENDPOINT + "?dateAfter=2022-12-31")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[0].dateDetails.date", is("2023-01-10")))
+            .andExpect(jsonPath("$[0].location.county", is("Carlow")))
+            .andExpect(jsonPath("$[0].location.province", is("Leinster")))
+            .andExpect(jsonPath("$[0].propertyDetails.buildType", is("New Dwelling house /Apartment")))
+            .andExpect(jsonPath("$[0].transactionPrice", is(157709.25)));
+  }
+
+  @Test
+  public void getTransactionsBeforeDate_success() throws Exception {
+    PropertyTransaction testTransaction = new PropertyTransaction(
+            1L,
+            new DateDetails(Date.valueOf("2022-12-10")),
+            new Location(1L, "Wexford", "Leinster"),
+            new PropertyDetails(1L, "New Dwelling house /Apartment"),
+            257709.25F);
+
+    List<PropertyTransaction> testTransactionList = new ArrayList<>(Arrays.asList(testTransaction));
+
+    Mockito
+            .when(propertyTransactionRepository.findByDateDetails_DateBefore(Date.valueOf("2022-12-31")))
+            .thenReturn(testTransactionList);
+
+    mockMvc.perform(MockMvcRequestBuilders
+            .get(ENDPOINT + "?dateBefore=2022-12-31")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(testTransactionList.size())))
+            .andExpect(jsonPath("$[0].dateDetails.date", is(testTransaction.getDateDetails().getDate().toString())))
+            .andExpect(jsonPath("$[0].location.county", is(testTransaction.getLocation().getCounty())))
+            .andExpect(jsonPath("$[0].location.province", is(testTransaction.getLocation().getProvince())))
+            .andExpect(jsonPath("$[0].propertyDetails.buildType", is(testTransaction.getPropertyDetails().getBuildType())))
+            .andExpect(jsonPath("$[0].transactionPrice", is((double) testTransaction.getTransactionPrice())));
+  }
+
+  @Test
+  public void getTransactionBetweenDate_success() throws Exception {
+    PropertyTransaction testTransaction = new PropertyTransaction(
+            1L,
+            new DateDetails(Date.valueOf("2022-12-10")),
+            new Location(1L, "Wexford", "Leinster"),
+            new PropertyDetails(1L, "New Dwelling house /Apartment"),
+            257709.25F);
+
+    List<PropertyTransaction> testTransactionList = new ArrayList<>(Arrays.asList(testTransaction));
+
+    Mockito
+            .when(propertyTransactionRepository.findByDateDetails_DateBetween(Date.valueOf("2022-12-01"), Date.valueOf("2022-12-31")))
+            .thenReturn(testTransactionList);
+
+    mockMvc.perform(MockMvcRequestBuilders
+            .get(ENDPOINT + "?dateAfter=2022-12-01&dateBefore=2022-12-31")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(testTransactionList.size())))
+            .andExpect(jsonPath("$[0].dateDetails.date", is(testTransaction.getDateDetails().getDate().toString())))
+            .andExpect(jsonPath("$[0].location.county", is(testTransaction.getLocation().getCounty())))
+            .andExpect(jsonPath("$[0].location.province", is(testTransaction.getLocation().getProvince())))
+            .andExpect(jsonPath("$[0].propertyDetails.buildType", is(testTransaction.getPropertyDetails().getBuildType())))
+            .andExpect(jsonPath("$[0].transactionPrice", is((double) testTransaction.getTransactionPrice())));
+  }
 
 }

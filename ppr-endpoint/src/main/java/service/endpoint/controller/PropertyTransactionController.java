@@ -24,10 +24,17 @@ public class PropertyTransactionController {
   }
 
   @GetMapping("/property-transactions")
-  public ResponseEntity<List<PropertyTransaction>> getPropertyTransactions(@RequestParam(required = false) Date dateAfter) {
+  public ResponseEntity<List<PropertyTransaction>> getPropertyTransactions(
+          @RequestParam(required = false) Date dateBefore,
+          @RequestParam(required = false) Date dateAfter
+  ) {
     List<PropertyTransaction> propertyTransactions = new ArrayList<>();
-    if (dateAfter != null) propertyTransactionRepository.findByDateDetails_DateAfter(dateAfter).forEach(propertyTransactions::add);
+
+    if (dateBefore != null && dateAfter != null) propertyTransactionRepository.findByDateDetails_DateBetween(dateAfter, dateBefore).forEach(propertyTransactions::add);
+    else if (dateBefore != null) propertyTransactionRepository.findByDateDetails_DateBefore(dateBefore).forEach(propertyTransactions::add);
+    else if (dateAfter != null) propertyTransactionRepository.findByDateDetails_DateAfter(dateAfter).forEach(propertyTransactions::add);
     else propertyTransactionRepository.findAll().forEach(propertyTransactions::add);
+
     return new ResponseEntity<>(propertyTransactions, HttpStatus.OK);
   }
 }
