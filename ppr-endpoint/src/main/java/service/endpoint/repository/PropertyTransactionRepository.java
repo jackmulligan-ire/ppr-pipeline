@@ -11,5 +11,5 @@ public interface PropertyTransactionRepository extends JpaRepository<PropertyTra
 
   List<PropertyTransaction> findByDateDetails_DateBefore(Date date);
 
-  List<PropertyTransaction> findByDateDetails_DateBetween(Date dateAfter, Date dateBefore);
+  List<PropertyTransaction> findByDateDetails_DateBetween(Date startDate, Date endDate);
 }

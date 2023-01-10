@@ -25,14 +25,17 @@ public class PropertyTransactionController {
 
   @GetMapping("/property-transactions")
   public ResponseEntity<List<PropertyTransaction>> getPropertyTransactions(
-          @RequestParam(required = false) Date dateBefore,
-          @RequestParam(required = false) Date dateAfter
+          @RequestParam(required = false) Date startDate,
+          @RequestParam(required = false) Date endDate
   ) {
     List<PropertyTransaction> propertyTransactions = new ArrayList<>();
 
-    if (dateBefore != null && dateAfter != null) propertyTransactionRepository.findByDateDetails_DateBetween(dateAfter, dateBefore).forEach(propertyTransactions::add);
-    else if (dateBefore != null) propertyTransactionRepository.findByDateDetails_DateBefore(dateBefore).forEach(propertyTransactions::add);
-    else if (dateAfter != null) propertyTransactionRepository.findByDateDetails_DateAfter(dateAfter).forEach(propertyTransactions::add);
+    if (startDate != null && endDate != null) {
+      if (startDate.after(endDate)) return new ResponseEntity<>(propertyTransactions, HttpStatus.BAD_REQUEST);
+      propertyTransactionRepository.findByDateDetails_DateBetween(startDate, endDate).forEach(propertyTransactions::add);
+    }
+    else if (endDate != null) propertyTransactionRepository.findByDateDetails_DateBefore(endDate).forEach(propertyTransactions::add);
+    else if (startDate != null) propertyTransactionRepository.findByDateDetails_DateAfter(startDate).forEach(propertyTransactions::add);
     else propertyTransactionRepository.findAll().forEach(propertyTransactions::add);
 
     return new ResponseEntity<>(propertyTransactions, HttpStatus.OK);

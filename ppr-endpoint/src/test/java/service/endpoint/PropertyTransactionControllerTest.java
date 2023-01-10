@@ -80,7 +80,7 @@ public class PropertyTransactionControllerTest {
             .thenReturn(TRANSACTIONS);
 
     mockMvc.perform(MockMvcRequestBuilders
-            .get(ENDPOINT + "?dateAfter=2022-12-31")
+            .get(ENDPOINT + "?startDate=2022-12-31")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
@@ -107,7 +107,7 @@ public class PropertyTransactionControllerTest {
             .thenReturn(testTransactionList);
 
     mockMvc.perform(MockMvcRequestBuilders
-            .get(ENDPOINT + "?dateBefore=2022-12-31")
+            .get(ENDPOINT + "?endDate=2022-12-31")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(testTransactionList.size())))
@@ -134,7 +134,7 @@ public class PropertyTransactionControllerTest {
             .thenReturn(testTransactionList);
 
     mockMvc.perform(MockMvcRequestBuilders
-            .get(ENDPOINT + "?dateAfter=2022-12-01&dateBefore=2022-12-31")
+            .get(ENDPOINT + "?startDate=2022-12-01&endDate=2022-12-31")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(testTransactionList.size())))
@@ -143,6 +143,33 @@ public class PropertyTransactionControllerTest {
             .andExpect(jsonPath("$[0].location.province", is(testTransaction.getLocation().getProvince())))
             .andExpect(jsonPath("$[0].propertyDetails.buildType", is(testTransaction.getPropertyDetails().getBuildType())))
             .andExpect(jsonPath("$[0].transactionPrice", is((double) testTransaction.getTransactionPrice())));
+  }
+
+  @Test
+  public void getTransactionBetweenDate_failure_wrongWay() throws Exception {
+
+    mockMvc.perform(MockMvcRequestBuilders
+                    .get(ENDPOINT + "?startDate=2023-12-01&endDate=2021-12-31")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().is4xxClientError());
+  }
+
+  @Test
+  public void getTransactionBetweenDate_failure_wrongType() throws Exception {
+
+    mockMvc.perform(MockMvcRequestBuilders
+                    .get(ENDPOINT + "?startDate=\"2022-12-01\"&endDate=\"2022-12-31\"")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().is4xxClientError());
+  }
+
+  @Test
+  public void getTransactionBetweenDate_failure_badDate() throws Exception {
+
+    mockMvc.perform(MockMvcRequestBuilders
+                    .get(ENDPOINT + "?startDate=2022-13-01&endDate=2022-31-12")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().is4xxClientError());
   }
 
 }
