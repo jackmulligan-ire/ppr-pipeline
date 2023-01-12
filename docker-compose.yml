@@ -1,14 +1,33 @@
 version: "0.1"
+
+x-common-variables: &common-variables
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
 services:
+  endpoint:
+    image: openjdk:8-jre-alpine
+    environment: *common-variables
+    ports:
+      - "80:8080"
+    volumes:
+      - ./ppr-endpoint/target/ppr-endpoint-0.0.1-SNAPSHOT.jar:/ppr-endpoint.jar
+    command: ["java", "-jar", "ppr-endpoint.jar"]
+    depends_on:
+      pg-database:
+        condition: service_healthy
   pg-database:
     image: postgres:14
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    environment: *common-variables
     ports:
       - "5433:5432"
     volumes:
       - ./sql/backup.sql:/docker-entrypoint-initdb.d/backup.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   pg-admin:
     image: dpage/pgadmin4:latest
     environment:
