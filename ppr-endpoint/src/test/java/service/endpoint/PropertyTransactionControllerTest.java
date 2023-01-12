@@ -18,6 +18,8 @@ import service.endpoint.repository.PropertyTransactionRepository;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,8 +77,10 @@ public class PropertyTransactionControllerTest {
 
   @Test
   public void getTransactionsAfterDate_success() throws Exception {
+    String todaysDate = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now());
+
     Mockito
-            .when(propertyTransactionRepository.findByDateDetails_DateAfter(Date.valueOf("2022-12-31")))
+            .when(propertyTransactionRepository.findByDateDetails_DateBetween(Date.valueOf("2022-12-31"), Date.valueOf(todaysDate)))
             .thenReturn(TRANSACTIONS);
 
     mockMvc.perform(MockMvcRequestBuilders
@@ -103,7 +107,7 @@ public class PropertyTransactionControllerTest {
     List<PropertyTransaction> testTransactionList = new ArrayList<>(Arrays.asList(testTransaction));
 
     Mockito
-            .when(propertyTransactionRepository.findByDateDetails_DateBefore(Date.valueOf("2022-12-31")))
+            .when(propertyTransactionRepository.findByDateDetails_DateBetween(Date.valueOf("2009-12-31"), Date.valueOf("2022-12-31")))
             .thenReturn(testTransactionList);
 
     mockMvc.perform(MockMvcRequestBuilders
