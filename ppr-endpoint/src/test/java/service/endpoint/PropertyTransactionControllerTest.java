@@ -17,7 +17,6 @@ import service.endpoint.model.PropertyTransaction;
 import service.endpoint.repository.PropertyTransactionRepository;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public class PropertyTransactionControllerTest {
   }
 
   @Test
-  public void getTransactionsAfterDate_success() throws Exception {
+  public void getTransactionsAfterStartDate_success() throws Exception {
     String todaysDate = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now());
 
     Mockito
@@ -96,7 +95,7 @@ public class PropertyTransactionControllerTest {
   }
 
   @Test
-  public void getTransactionsBeforeDate_success() throws Exception {
+  public void getTransactionsBeforeEndDate_success() throws Exception {
     PropertyTransaction testTransaction = new PropertyTransaction(
             1L,
             new DateDetails(Date.valueOf("2022-12-10")),
@@ -123,7 +122,7 @@ public class PropertyTransactionControllerTest {
   }
 
   @Test
-  public void getTransactionBetweenDate_success() throws Exception {
+  public void getTransactionBetweenDates_success() throws Exception {
     PropertyTransaction testTransaction = new PropertyTransaction(
             1L,
             new DateDetails(Date.valueOf("2022-12-10")),
@@ -150,7 +149,7 @@ public class PropertyTransactionControllerTest {
   }
 
   @Test
-  public void getTransactionBetweenDate_failure_wrongWay() throws Exception {
+  public void getTransactionBetweenDates_failure_wrongWay() throws Exception {
 
     mockMvc.perform(MockMvcRequestBuilders
                     .get(ENDPOINT + "?startDate=2023-12-01&endDate=2021-12-31")
@@ -159,7 +158,7 @@ public class PropertyTransactionControllerTest {
   }
 
   @Test
-  public void getTransactionBetweenDate_failure_wrongType() throws Exception {
+  public void getTransactionBetweenDates_failure_wrongType() throws Exception {
 
     mockMvc.perform(MockMvcRequestBuilders
                     .get(ENDPOINT + "?startDate=\"2022-12-01\"&endDate=\"2022-12-31\"")
@@ -168,7 +167,7 @@ public class PropertyTransactionControllerTest {
   }
 
   @Test
-  public void getTransactionBetweenDate_failure_badDate() throws Exception {
+  public void getTransactionBetweenDates_failure_badDate() throws Exception {
 
     mockMvc.perform(MockMvcRequestBuilders
                     .get(ENDPOINT + "?startDate=2022-13-01&endDate=2022-31-12")
