@@ -23,8 +23,10 @@ public class DateDetails {
   public DateDetails() {
   }
 
-  public DateDetails(Date date) {
+  public DateDetails(Date date, Integer month, Integer year) {
     this.date = date;
+    this.month = month;
+    this.year = year;
   }
 
   public Date getDate() {
@@ -35,4 +37,19 @@ public class DateDetails {
     this.date = date;
   }
 
+  public Integer getMonth() {
+    return month;
+  }
+
+  public void setMonth(Integer month) {
+    this.month = month;
+  }
+
+  public Integer getYear() {
+    return year;
+  }
+
+  public void setYear(Integer year) {
+    this.year = year;
+  }
 }

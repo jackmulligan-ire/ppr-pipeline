@@ -1,5 +1,6 @@
 package service.endpoint.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import service.endpoint.model.PropertyTransaction;
+import service.endpoint.model.PropertyTransactionStats;
 import service.endpoint.repository.PropertyTransactionRepository;
+import service.endpoint.repository.PropertyTransactionStatsRepository;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -19,11 +22,11 @@ import java.util.List;
 @RequestMapping("/api")
 public class PropertyTransactionController {
 
-  private final PropertyTransactionRepository propertyTransactionRepository;
+  @Autowired
+  PropertyTransactionRepository propertyTransactionRepository;
 
-  public PropertyTransactionController(PropertyTransactionRepository propertyTransactionRepository) {
-    this.propertyTransactionRepository = propertyTransactionRepository;
-  }
+  @Autowired
+  PropertyTransactionStatsRepository propertyTransactionStatsRepository;
 
   @GetMapping("/property-transactions")
   public ResponseEntity<List<PropertyTransaction>> getPropertyTransactions(
@@ -44,5 +47,11 @@ public class PropertyTransactionController {
     else propertyTransactionRepository.findAll().forEach(propertyTransactions::add);
 
     return new ResponseEntity<>(propertyTransactions, HttpStatus.OK);
+  }
+
+  @GetMapping("/property-transaction-stats")
+  public ResponseEntity<List<PropertyTransactionStats>> getPropertyTransactionStats(){
+    List<PropertyTransactionStats> propertyTransactionStats = propertyTransactionStatsRepository.findAll();
+    return new ResponseEntity<>(propertyTransactionStats, HttpStatus.OK);
   }
 }

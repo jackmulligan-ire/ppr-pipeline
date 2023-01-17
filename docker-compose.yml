@@ -22,7 +22,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - ./sql/backup.sql:/docker-entrypoint-initdb.d/backup.sql
+      - ./new-backup.sql:/docker-entrypoint-initdb.d/backup.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
