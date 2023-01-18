@@ -15,8 +15,8 @@ import service.endpoint.repository.PropertyTransactionStatsRepository;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -50,8 +50,40 @@ public class PropertyTransactionController {
   }
 
   @GetMapping("/property-transaction-stats")
-  public ResponseEntity<List<PropertyTransactionStats>> getPropertyTransactionStats(){
+  public ResponseEntity<List<PropertyTransactionStatsFormatted>> getPropertyTransactionStats() {
     List<PropertyTransactionStats> propertyTransactionStats = propertyTransactionStatsRepository.findAll();
-    return new ResponseEntity<>(propertyTransactionStats, HttpStatus.OK);
+    List<PropertyTransactionStatsFormatted> formattedStats = formatPropertyTransactionStats(propertyTransactionStats);
+    return new ResponseEntity<>(formattedStats, HttpStatus.OK);
+  }
+
+  private List<PropertyTransactionStatsFormatted> formatPropertyTransactionStats(List<PropertyTransactionStats> statsList) {
+    List<PropertyTransactionStatsFormatted> formattedStats = new ArrayList<>();
+
+    Set<String> uniqueLocations = new TreeSet<>();
+    statsList.stream().filter(pts -> uniqueLocations.add(pts.getLocation())).collect(Collectors.toList());
+
+    for (String location: uniqueLocations) {
+      PropertyTransactionStatsFormatted locationOutput = new PropertyTransactionStatsFormatted();
+      locationOutput.setLocation(location);
+
+      boolean firstMatch = false;
+      for (PropertyTransactionStats stats: statsList) {
+        if (stats.getLocation().equals(location)) {
+          if (!firstMatch) firstMatch = true;
+          PropertyTransactionStatsFormattedData statsData = new PropertyTransactionStatsFormattedData(
+                  stats.getYear(),
+                  stats.getMonth(),
+                  stats.getMedianPrice(),
+                  stats.getMeanPrice(),
+                  stats.getTransactions()
+          );
+          locationOutput.getData().add(statsData);
+        }
+        else if (firstMatch) break;
+      }
+      formattedStats.add(locationOutput);
+    }
+
+    return formattedStats;
   }
 }
