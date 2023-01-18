@@ -15,6 +15,7 @@ import service.endpoint.model.Location;
 import service.endpoint.model.PropertyDetails;
 import service.endpoint.model.PropertyTransaction;
 import service.endpoint.repository.PropertyTransactionRepository;
+import service.endpoint.repository.PropertyTransactionStatsRepository;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -38,16 +39,19 @@ public class PropertyTransactionControllerTest {
   @MockBean
   PropertyTransactionRepository propertyTransactionRepository;
 
+  @MockBean
+  PropertyTransactionStatsRepository propertyTransactionstatsRepository;
+
   PropertyTransaction RECORD_1 = new PropertyTransaction(
           1L,
-          new DateDetails(Date.valueOf("2023-01-10")),
+          new DateDetails(Date.valueOf("2023-01-10"), 1, 2023),
           new Location(1L, "Carlow", "Leinster"),
           new PropertyDetails(1L, "New Dwelling house /Apartment"),
           157709.25F);
 
   PropertyTransaction RECORD_2 = new PropertyTransaction(
           2L,
-          new DateDetails(Date.valueOf("2023-01-09")),
+          new DateDetails(Date.valueOf("2023-01-09"), 1, 2023),
           new Location(2L, "Wexford", "Leinster"),
           new PropertyDetails(2L, "New Dwelling house /Apartment"),
           257709.25F);
@@ -98,7 +102,7 @@ public class PropertyTransactionControllerTest {
   public void getTransactionsBeforeEndDate_success() throws Exception {
     PropertyTransaction testTransaction = new PropertyTransaction(
             1L,
-            new DateDetails(Date.valueOf("2022-12-10")),
+            new DateDetails(Date.valueOf("2022-12-10"), 12, 2022),
             new Location(1L, "Wexford", "Leinster"),
             new PropertyDetails(1L, "New Dwelling house /Apartment"),
             257709.25F);
@@ -125,7 +129,7 @@ public class PropertyTransactionControllerTest {
   public void getTransactionBetweenDates_success() throws Exception {
     PropertyTransaction testTransaction = new PropertyTransaction(
             1L,
-            new DateDetails(Date.valueOf("2022-12-10")),
+            new DateDetails(Date.valueOf("2022-12-10"), 12, 2022),
             new Location(1L, "Wexford", "Leinster"),
             new PropertyDetails(1L, "New Dwelling house /Apartment"),
             257709.25F);

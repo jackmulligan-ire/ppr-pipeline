@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface PropertyTransactionRepository extends JpaRepository<PropertyTransaction, Long> {
   List<PropertyTransaction> findByDateDetails_DateBetween(Date startDate, Date endDate);
+
 }
