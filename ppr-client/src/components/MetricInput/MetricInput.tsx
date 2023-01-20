@@ -4,12 +4,12 @@ import MenuItem from "@mui/material/MenuItem";
 
 const statistics = [
   {
-    value: "medianSalePrice",
-    label: "Median Sale Price",
-  },
-  {
     value: "meanSalePrice",
     label: "Mean Sale Price",
+  },
+  {
+    value: "medianSalePrice",
+    label: "Median Sale Price",
   },
   {
     value: "transactions",
