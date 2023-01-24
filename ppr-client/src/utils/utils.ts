@@ -220,6 +220,12 @@ export const dataSample: { location: string; data: SequentialData[] }[] = [
         medianSalePrice: 210000.0,
         transactions: 40,
       },
+      {
+        year: 2014,
+        month: 2,
+        medianSalePrice: 160000.0,
+        transactions: 34,
+      },
     ],
   },
   {
@@ -439,6 +445,12 @@ export const dataSample: { location: string; data: SequentialData[] }[] = [
         year: 2020,
         month: 2,
         medianSalePrice: 290000.0,
+        transactions: 34,
+      },
+      {
+        year: 2014,
+        month: 2,
+        medianSalePrice: 110000.0,
         transactions: 34,
       },
     ],

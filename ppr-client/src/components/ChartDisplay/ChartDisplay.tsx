@@ -6,14 +6,19 @@ import DataContext from "../../contexts/DataContext";
 import { SequentialData } from "../../contexts/DataContext/DataContext";
 import ActiveMetricContext from "../../contexts/ActiveMetricContext";
 
-function ChartDisplay() {
+interface ChartDisplayProps {
+  months?: number;
+}
+
+function ChartDisplay({ months }: ChartDisplayProps) {
   const selectedLocations = useContext(SelectedLocationsContext);
   const data = useContext(DataContext);
   const activeMetric = useContext(ActiveMetricContext);
 
   const getSeries = (
     inputData: { location: string; data: SequentialData[] }[],
-    activeMetric: { label: string; value: string }
+    activeMetric: { label: string; value: string },
+    months?: number
   ): Highcharts.SeriesOptionsType[] => {
     const getProcessedData = (rawData: SequentialData[]) => {
       return rawData.map((data) => [
@@ -27,14 +32,16 @@ function ChartDisplay() {
       .map((child) => {
         return {
           type: "line",
-          data: getProcessedData(child.data),
+          data: getProcessedData(child.data).slice(0, months),
           name: child.location,
         };
       });
   };
 
   const options: Highcharts.Options = {
-    series: activeMetric ? getSeries(data, activeMetric) : undefined,
+    series: months
+      ? getSeries(data, activeMetric, months)
+      : getSeries(data, activeMetric),
     title: {
       text: undefined,
     },

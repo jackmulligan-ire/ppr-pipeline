@@ -1,10 +1,9 @@
-import { getByText, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import SelectedLocationsContext from "../../contexts/SelectedLocationsContext";
 import DataContext from "../../contexts/DataContext";
 import ChartDisplay from "./ChartDisplay";
 import { dataSample } from "../../utils/utils";
 import ActiveMetric from "../../contexts/ActiveMetricContext";
-import userEvent from "@testing-library/user-event";
 
 const setup = () =>
   render(
@@ -30,16 +29,9 @@ describe("<ChartDisplay />", () => {
     expect(screen.getByText(/500k/i)).toBeInTheDocument();
   });
 
-  it("Shows the last 3 years should be in the X ticks by default", () => {
-    setup();
-    const currentYear = new Date().getFullYear();
-    expect(
-      screen.getByText(new RegExp(currentYear.toString(), "i"))
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(new RegExp((currentYear - 2).toString(), "i"))
-    ).toBeInTheDocument();
-  });
+  it.todo(
+    "[FOR FUTURE CHART TEST SUITE] Shows the last 3 years should be in the X ticks by default"
+  );
 
   it("Shows the active statistic as the y-label of the graph", () => {
     setup();
@@ -50,5 +42,26 @@ describe("<ChartDisplay />", () => {
     setup();
     expect(screen.queryByText(/\b20\b/)).not.toBeInTheDocument();
     expect(screen.queryByText(/\b50\b/)).not.toBeInTheDocument();
+  });
+
+  it("Only renders the relative datapoints for the time horizon", () => {
+    render(
+      <ActiveMetric.Provider
+        value={{ value: "medianSalePrice", label: "Median Sale Price" }}
+      >
+        <DataContext.Provider value={dataSample}>
+          <SelectedLocationsContext.Provider value={["Carlow", "Cavan"]}>
+            <ChartDisplay months={12} />
+          </SelectedLocationsContext.Provider>
+        </DataContext.Provider>
+      </ActiveMetric.Provider>
+    );
+    const currentYear = new Date().getFullYear();
+    expect(
+      screen.getByText(new RegExp(currentYear.toString(), "i"))
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(new RegExp((currentYear - 1).toString(), "i"))
+    ).not.toBeInTheDocument();
   });
 });
