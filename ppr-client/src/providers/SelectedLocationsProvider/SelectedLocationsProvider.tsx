@@ -3,7 +3,7 @@ import SelectedLocationsContext from "../../contexts/SelectedLocationsContext";
 
 function SelectedLocationsProvider(props: { children: ReactNode }) {
   return (
-    <SelectedLocationsContext.Provider value={["Carlow"]}>
+    <SelectedLocationsContext.Provider value={["Carlow", "Cavan"]}>
       {props.children}
     </SelectedLocationsContext.Provider>
   );
