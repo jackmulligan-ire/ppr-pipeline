@@ -7,8 +7,11 @@ export type SequentialData = {
   transactions: number;
 };
 
-const DataContext = React.createContext<
-  { location: string; data: SequentialData[] }[]
->([]);
+export type PropertyTransactions = {
+  location: string;
+  data: SequentialData[];
+};
+
+const DataContext = React.createContext<PropertyTransactions[]>([]);
 
 export default DataContext;

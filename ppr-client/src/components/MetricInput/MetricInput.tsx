@@ -5,12 +5,12 @@ import useSetActiveMetric from "../../hooks/useSetActiveMetric";
 
 const statistics = [
   {
-    value: "meanSalePrice",
-    label: "Mean Sale Price",
+    value: "meanPrice",
+    label: "Mean Price",
   },
   {
-    value: "medianSalePrice",
-    label: "Median Sale Price",
+    value: "medianPrice",
+    label: "Median Price",
   },
   {
     value: "transactions",
@@ -27,7 +27,7 @@ function MetricInput() {
         <TextField
           select
           fullWidth
-          defaultValue="medianSalePrice"
+          defaultValue="medianPrice"
           label="Select Metric"
         >
           {statistics.map((option) => (

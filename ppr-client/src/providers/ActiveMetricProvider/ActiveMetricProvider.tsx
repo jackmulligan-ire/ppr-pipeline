@@ -6,8 +6,8 @@ import SetActiveMetricContext from "../../contexts/ActiveMetricContext/SetActive
 
 function ActiveMetricProvider(props: { children: ReactNode }) {
   const [activeMetric, setActiveMetric] = useState<ActiveMetric>({
-    label: "Median Sale Price",
-    value: "medianSalePrice",
+    label: "Median Price",
+    value: "medianPrice",
   });
 
   return (

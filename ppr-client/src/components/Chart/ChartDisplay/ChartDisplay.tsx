@@ -3,7 +3,10 @@ import HighchartsReact from "highcharts-react-official";
 import * as Highcharts from "highcharts";
 import SelectedLocationsContext from "../../../contexts/SelectedLocationsContext";
 import DataContext from "../../../contexts/DataContext";
-import { SequentialData } from "../../../contexts/DataContext/DataContext";
+import {
+  PropertyTransactions,
+  SequentialData,
+} from "../../../contexts/DataContext/DataContext";
 import ActiveMetricContext from "../../../contexts/ActiveMetricContext";
 
 interface ChartDisplayProps {
@@ -17,7 +20,7 @@ function ChartDisplay({ yearsVisible }: ChartDisplayProps) {
   const yearInMs = 365 * 24 * 3600 * 1000;
 
   const getSeries = (
-    inputData: { location: string; data: SequentialData[] }[],
+    inputData: PropertyTransactions[],
     activeMetric: { label: string; value: string },
     yearsVisible: number
   ): Highcharts.SeriesOptionsType[] => {
@@ -56,7 +59,7 @@ function ChartDisplay({ yearsVisible }: ChartDisplayProps) {
     },
     yAxis: {
       title: {
-        text: activeMetric?.label,
+        text: activeMetric.label,
       },
     },
     tooltip: {
