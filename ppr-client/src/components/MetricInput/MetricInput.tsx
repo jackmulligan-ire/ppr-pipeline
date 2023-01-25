@@ -1,6 +1,7 @@
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
+import useSetActiveMetric from "../../hooks/useSetActiveMetric";
 
 const statistics = [
   {
@@ -17,7 +18,9 @@ const statistics = [
   },
 ];
 
-function StatInput() {
+function MetricInput() {
+  const setActiveMetric = useSetActiveMetric();
+
   return (
     <Grid container>
       <Grid item xs={12} sm={6}>
@@ -28,7 +31,13 @@ function StatInput() {
           label="Select Metric"
         >
           {statistics.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
+            <MenuItem
+              key={option.value}
+              value={option.value}
+              onClick={() =>
+                setActiveMetric({ value: option.value, label: option.label })
+              }
+            >
               {option.label}
             </MenuItem>
           ))}
@@ -38,4 +47,4 @@ function StatInput() {
   );
 }
 
-export default StatInput;
+export default MetricInput;

@@ -1,8 +1,13 @@
 import React from "react";
 
-const ActiveMetricContext = React.createContext<{
+export type ActiveMetric = {
   label: string;
   value: string;
-}>({ label: "", value: "" });
+};
+
+const ActiveMetricContext = React.createContext<ActiveMetric>({
+  label: "",
+  value: "",
+});
 
 export default ActiveMetricContext;

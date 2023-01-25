@@ -1,10 +1,16 @@
 import { getByText, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import ActiveMetricProvider from "../../providers/ActiveMetricProvider";
 import MetricInput from "./MetricInput";
 
-const setup = () => render(<MetricInput />);
+const setup = () =>
+  render(
+    <ActiveMetricProvider>
+      <MetricInput />
+    </ActiveMetricProvider>
+  );
 
-describe("<StatInput />", () => {
+describe("<MetricInput />", () => {
   it("Shows an input with 'Select Metric'", () => {
     setup();
     expect(screen.getByLabelText(/select metric/i)).toBeInTheDocument();

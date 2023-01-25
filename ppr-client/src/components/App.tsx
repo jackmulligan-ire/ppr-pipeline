@@ -1,13 +1,13 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 
-import MetricInput from "./components/MetricInput";
-import LocationInput from "./components/LocationInput";
-import LocationDataGrid from "./components/LocationDataGrid";
-import SelectedLocationProvider from "./providers/SelectedLocationsProvider";
-import DataProvider from "./providers/DataProvider";
-import Chart from "./components/Chart";
-import ActiveMetricProvider from "./providers/ActiveMetricProvider";
+import MetricInput from "./MetricInput";
+import LocationInput from "./LocationInput";
+import LocationDataGrid from "./LocationDataGrid";
+import SelectedLocationProvider from "../providers/SelectedLocationsProvider";
+import DataProvider from "../providers/DataProvider";
+import Chart from "./Chart";
+import ActiveMetricProvider from "../providers/ActiveMetricProvider";
 
 function App() {
   return (
