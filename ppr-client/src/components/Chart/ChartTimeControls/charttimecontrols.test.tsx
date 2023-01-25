@@ -3,7 +3,7 @@ import ChartTimeControls from "./ChartTimeControls";
 
 describe("<ChartTimeControls />", () => {
   it("Renders 4 buttons with each field", () => {
-    render(<ChartTimeControls />);
+    render(<ChartTimeControls setYearsVisible={jest.fn()} />);
     ["1Y", "3Y", "5Y", "ALL"].forEach((field) => {
       expect(
         screen.getByRole("button", {

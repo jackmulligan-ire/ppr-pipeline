@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import SelectedLocationsContext from "../../contexts/SelectedLocationsContext";
-import DataContext from "../../contexts/DataContext";
+import SelectedLocationsContext from "../../../contexts/SelectedLocationsContext";
+import DataContext from "../../../contexts/DataContext";
 import ChartDisplay from "./ChartDisplay";
-import { dataSample } from "../../utils/utils";
-import ActiveMetric from "../../contexts/ActiveMetricContext";
+import { dataSample } from "../../../utils/utils";
+import ActiveMetric from "../../../contexts/ActiveMetricContext";
 
 const setup = () =>
   render(
@@ -12,7 +12,7 @@ const setup = () =>
     >
       <DataContext.Provider value={dataSample}>
         <SelectedLocationsContext.Provider value={["Carlow", "Cavan"]}>
-          <ChartDisplay />
+          <ChartDisplay yearsVisible={3} />
         </SelectedLocationsContext.Provider>
       </DataContext.Provider>
     </ActiveMetric.Provider>
@@ -28,10 +28,6 @@ describe("<ChartDisplay />", () => {
     expect(screen.getByText(/400k/i)).toBeInTheDocument();
     expect(screen.getByText(/500k/i)).toBeInTheDocument();
   });
-
-  it.todo(
-    "[FOR FUTURE CHART TEST SUITE] Shows the last 3 years should be in the X ticks by default"
-  );
 
   it("Shows the active statistic as the y-label of the graph", () => {
     setup();
@@ -51,7 +47,7 @@ describe("<ChartDisplay />", () => {
       >
         <DataContext.Provider value={dataSample}>
           <SelectedLocationsContext.Provider value={["Carlow", "Cavan"]}>
-            <ChartDisplay months={12} />
+            <ChartDisplay yearsVisible={1} />
           </SelectedLocationsContext.Provider>
         </DataContext.Provider>
       </ActiveMetric.Provider>

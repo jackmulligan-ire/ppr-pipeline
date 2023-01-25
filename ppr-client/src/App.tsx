@@ -6,8 +6,7 @@ import LocationInput from "./components/LocationInput";
 import LocationDataGrid from "./components/LocationDataGrid";
 import SelectedLocationProvider from "./providers/SelectedLocationsProvider";
 import DataProvider from "./providers/DataProvider";
-import ChartTimeControls from "./components/ChartTimeControls";
-import ChartDisplay from "./components/ChartDisplay";
+import Chart from "./components/Chart";
 import ActiveMetricProvider from "./providers/ActiveMetricProvider";
 
 function App() {
@@ -21,8 +20,7 @@ function App() {
                 <MetricInput />
               </Grid>
               <Grid item mb={3} xs={12}>
-                <ChartTimeControls />
-                <ChartDisplay />
+                <Chart />
               </Grid>
               <Grid item mb={3} xs={12}>
                 <LocationDataGrid />
