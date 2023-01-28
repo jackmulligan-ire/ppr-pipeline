@@ -1,11 +1,18 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import SelectedLocationsContext from "../../contexts/SelectedLocationsContext";
+import SetSelectedLocationsContext from "../../contexts/SelectedLocationsContext/SetSelectedLocationsContext";
 
 function SelectedLocationsProvider(props: { children: ReactNode }) {
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([
+    "Dublin",
+  ]);
+
   return (
-    <SelectedLocationsContext.Provider value={["Carlow", "Cavan"]}>
-      {props.children}
-    </SelectedLocationsContext.Provider>
+    <SetSelectedLocationsContext.Provider value={setSelectedLocations}>
+      <SelectedLocationsContext.Provider value={selectedLocations}>
+        {props.children}
+      </SelectedLocationsContext.Provider>
+    </SetSelectedLocationsContext.Provider>
   );
 }
 
