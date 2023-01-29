@@ -36,8 +36,7 @@ function ChartDisplay({ yearsVisible }: ChartDisplayProps) {
           Date.UTC(data.year, data.month - 1),
           data[activeMetric.value as keyof SequentialData],
         ])
-        .filter(([date]) => Date.now() - date < yearsVisible * yearInMs)
-        .sort();
+        .filter(([date]) => Date.now() - date < yearsVisible * yearInMs);
     };
 
     return inputData
