@@ -1364,3 +1364,8 @@ export const dataSample: { location: string; data: SequentialData[] }[] = [
     ],
   },
 ];
+
+export const endpoints = {
+  local: "localhost",
+  remote: "ec2-107-20-54-151.compute-1.amazonaws.com",
+};
