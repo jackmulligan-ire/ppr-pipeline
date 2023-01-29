@@ -3,7 +3,6 @@ import Grid from "@mui/material/Grid";
 
 import MetricInput from "./MetricInput";
 import LocationInput from "./LocationInput";
-import LocationDataGrid from "./LocationDataGrid";
 import SelectedLocationProvider from "../providers/SelectedLocationsProvider";
 import DataProvider from "../providers/DataProvider";
 import Chart from "./Chart";
@@ -23,7 +22,6 @@ function App() {
                 <Chart />
               </Grid>
               <Grid item mb={3} xs={12}>
-                <LocationDataGrid />
                 <LocationInput />
               </Grid>
             </Grid>

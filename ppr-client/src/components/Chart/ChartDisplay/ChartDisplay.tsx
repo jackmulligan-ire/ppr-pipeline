@@ -13,6 +13,12 @@ interface ChartDisplayProps {
   yearsVisible: number;
 }
 
+Highcharts.setOptions({
+  lang: {
+    thousandsSep: ",",
+  },
+});
+
 function ChartDisplay({ yearsVisible }: ChartDisplayProps) {
   const selectedLocations = useContext(SelectedLocationsContext);
   const data = useContext(DataContext);
@@ -63,8 +69,10 @@ function ChartDisplay({ yearsVisible }: ChartDisplayProps) {
       },
     },
     tooltip: {
-      pointFormat: "<b>{series.name}: {point.y}<b>",
+      pointFormat:
+        "<span style='color:{series.color}'>\u25CF</span> <b>{series.name}</b>: {point.y}<br />",
       xDateFormat: "%b %Y",
+      shared: true,
     },
   };
 
