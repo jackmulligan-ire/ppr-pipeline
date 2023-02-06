@@ -5,19 +5,19 @@ from datetime import datetime
 
 # Third-party libs
 import boto3
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session
 
 # App modules
 import ppr_pipeline
-from ppr_pipeline.injectors.orm_classes import Property_Transaction_Staging
+from ppr_pipeline.loaders.orm_classes import Property_Transaction_Staging
 
-class PPR_Hist_Injector():
+class PPR_Loader():
     PPR_ALL_DIRTY_FILEPATH = 'tmp/PPR-ALL-dirty.csv'
     PPR_ALL_CLEAN_FILEPATH = 'tmp/PPR-ALL-clean.csv'
 
     @classmethod
-    def inject_ppr_data(cls):
+    def load_ppr_data(cls):
         if not os.path.exists(cls.PPR_ALL_DIRTY_FILEPATH):
             cls._get_all_from_s3()
             cls._clean_csv_of_euro()
@@ -71,8 +71,8 @@ class PPR_Hist_Injector():
 
     @classmethod
     def _inject_data_to_staging(cls, ppr_rows):
-        USER = os.environ.get('DB_USER')
-        PASSWORD = os.environ.get('DB_PASSWORD')
+        USER = os.environ.get('POSTGRES_USER')
+        PASSWORD = os.environ.get('POSTGRES_PASSWORD')
         HOST = os.environ.get('DB_HOST')
         PORT = os.environ.get('DB_PORT')
         NAME = os.environ.get('DB_NAME')
@@ -81,6 +81,9 @@ class PPR_Hist_Injector():
         engine = create_engine(db_string)
         
         with Session(engine) as session:
+            session.execute(delete(Property_Transaction_Staging.metadata.tables["staging"]))
+            session.commit()
+
             for data in ppr_rows:
                 try:
                     prop_trans = Property_Transaction_Staging(
@@ -116,3 +119,4 @@ class PPR_Hist_Injector():
                             data['Price'],
                         ])
                     session.rollback()
+

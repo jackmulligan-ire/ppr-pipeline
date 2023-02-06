@@ -1,9 +1,9 @@
 import os
 import psycopg2
 
-class PPR_Hist_Transformer():
+class PPR_Transformer():
     @classmethod
-    def transform_stage_to_dwh(cls):
+    def transform_staging_to_dwh(cls):
         commands = [
             'DELETE FROM fact_property_transactions;',
             'CALL populate_dim_date();',

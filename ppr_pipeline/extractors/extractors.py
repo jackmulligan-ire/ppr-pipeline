@@ -10,12 +10,12 @@ import boto3
 # App modules
 import ppr_pipeline
 
-class PPR_Hist_Scraper():
+class PPR_Extractor():
     @classmethod
-    def upload_hist_data(cls):
-        response_content = PPR_Hist_Scraper._request_zipfile()
-        csv_data = PPR_Hist_Scraper._extract_csv_data(response_content)
-        PPR_Hist_Scraper._upload_csv_to_s3(csv_data)
+    def extract_ppr_data(cls):
+        response_content = PPR_Extractor._request_zipfile()
+        csv_data = PPR_Extractor._extract_csv_data(response_content)
+        PPR_Extractor._upload_csv_to_s3(csv_data)
 
     @classmethod
     def _request_zipfile(cls):
