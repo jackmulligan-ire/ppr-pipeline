@@ -1,5 +1,3 @@
-#!/opt/anaconda3/envs/etl-pipeline/bin/python
-
 import sys
 from dotenv import load_dotenv
 
