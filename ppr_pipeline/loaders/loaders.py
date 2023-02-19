@@ -26,7 +26,7 @@ class PPR_Loader():
     @classmethod
     def _get_all_from_s3(cls):
         s3 = boto3.client('s3')
-        s3.download_file(ppr_pipeline.BUCKET_NAME, ppr_pipeline.ALL_OBJECT_NAME, cls.PPR_ALL_DIRTY_FILEPATH)
+        s3.download_file(ppr_pipeline.BUCKET_NAME, ppr_pipeline.CSV_FILE_NAME, cls.PPR_ALL_DIRTY_FILEPATH)
 
     @classmethod
     def _clean_csv_of_euro(cls):
