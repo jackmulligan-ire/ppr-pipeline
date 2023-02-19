@@ -10,11 +10,12 @@ from sqlalchemy.orm import Session
 
 # App modules
 import ppr_pipeline
-from ppr_pipeline.loaders.orm_classes import Property_Transaction_Staging
+from ppr_pipeline.loaders.orm_classes import Last_Updated, Property_Transaction_Staging
 
 class PPR_Loader():
     PPR_ALL_DIRTY_FILEPATH = 'tmp/PPR-ALL-dirty.csv'
     PPR_ALL_CLEAN_FILEPATH = 'tmp/PPR-ALL-clean.csv'
+    PPR_TIMESTAMP_FILEPATH = f'tmp/{ppr_pipeline.TIMESTAMP_FILE_NAME}'
 
     @classmethod
     def load_ppr_data(cls):
@@ -22,11 +23,23 @@ class PPR_Loader():
         cls._clean_csv_of_euro()
         ppr_data = cls._generate_iter_from_csv(cls.PPR_ALL_CLEAN_FILEPATH)
         cls._inject_data_to_staging(ppr_data)
+        cls._inject_last_updated_timestamp()
+
+    @classmethod
+    def _get_DB_engine(cls):
+        USER = os.environ.get('POSTGRES_USER')
+        PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+        HOST = os.environ.get('DB_HOST')
+        PORT = os.environ.get('DB_PORT')
+        NAME = os.environ.get('DB_NAME')
+
+        return create_engine(f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}")
 
     @classmethod
     def _get_all_from_s3(cls):
         s3 = boto3.client('s3')
         s3.download_file(ppr_pipeline.BUCKET_NAME, ppr_pipeline.CSV_FILE_NAME, cls.PPR_ALL_DIRTY_FILEPATH)
+        s3.download_file(ppr_pipeline.BUCKET_NAME, ppr_pipeline.TIMESTAMP_FILE_NAME, cls.PPR_TIMESTAMP_FILEPATH)
 
     @classmethod
     def _clean_csv_of_euro(cls):
@@ -70,16 +83,7 @@ class PPR_Loader():
 
     @classmethod
     def _inject_data_to_staging(cls, ppr_rows):
-        USER = os.environ.get('POSTGRES_USER')
-        PASSWORD = os.environ.get('POSTGRES_PASSWORD')
-        HOST = os.environ.get('DB_HOST')
-        PORT = os.environ.get('DB_PORT')
-        NAME = os.environ.get('DB_NAME')
-
-        db_string = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}"
-        engine = create_engine(db_string)
-        
-        with Session(engine) as session:
+        with Session(cls._get_DB_engine()) as session:
             session.execute(delete(Property_Transaction_Staging.metadata.tables["staging"]))
             session.commit()
 
@@ -118,4 +122,19 @@ class PPR_Loader():
                             data['Price'],
                         ])
                     session.rollback()
+    
+    @classmethod
+    def _inject_last_updated_timestamp(cls):
+        def _format_date(date):
+            split_string = date.split("/")
+            return f"{split_string[2]}-{split_string[1]}-{split_string[0]}"
+
+        with open(cls.PPR_TIMESTAMP_FILEPATH, "r") as timestamp_file:
+            timestamp = timestamp_file.read()
+            [date, time] = timestamp.split()
+            formatted_timestamp = f"{_format_date(date)} {time}"
+            with Session(cls._get_DB_engine()) as session:
+                session.add(Last_Updated(update=formatted_timestamp))
+                session.commit()
+
 

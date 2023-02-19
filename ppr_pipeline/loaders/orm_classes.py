@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Text
+from sqlalchemy import Column, Text, Integer, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
 base = declarative_base()
@@ -15,3 +15,9 @@ class Property_Transaction_Staging(base):
     description_of_property = Column(Text) 
     property_size_description = Column(Text)
     date_of_sale = Column(Text, primary_key=True)
+
+class Last_Updated(base):
+    __tablename__ = 'last_updated'
+
+    id = Column(Integer, primary_key=True)
+    update = Column(DateTime, primary_key=True)
