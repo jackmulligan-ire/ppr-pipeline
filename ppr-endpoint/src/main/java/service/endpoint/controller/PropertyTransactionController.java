@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import service.endpoint.model.LastUpdated;
 import service.endpoint.model.PropertyTransaction;
 import service.endpoint.model.PropertyTransactionStats;
+import service.endpoint.repository.LastUpdatedRepository;
 import service.endpoint.repository.PropertyTransactionRepository;
 import service.endpoint.repository.PropertyTransactionStatsRepository;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -25,6 +29,23 @@ public class PropertyTransactionController {
 
   @Autowired
   PropertyTransactionStatsRepository propertyTransactionStatsRepository;
+
+  @Autowired
+  LastUpdatedRepository lastUpdatedRepository;
+
+  @GetMapping("/last-update")
+  public ResponseEntity<Long> getLastUpdate() {
+    try {
+      List<LastUpdated> allUpdates = lastUpdatedRepository.findAllByOrderByUpdateDesc();
+      if (allUpdates.size() == 0) throw new RuntimeException();
+      return new ResponseEntity<>(allUpdates.get(0).getUpdate().getTime(), HttpStatus.OK);
+    } catch (RuntimeException e) {
+      System.out.println("I am here.");
+      throw new ResponseStatusException(
+              HttpStatus.NOT_FOUND, "No updates found", e
+      );
+    }
+  }
 
   @GetMapping("/property-transactions")
   public ResponseEntity<List<PropertyTransaction>> getPropertyTransactions(

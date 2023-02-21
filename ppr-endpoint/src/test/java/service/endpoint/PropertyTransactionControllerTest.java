@@ -14,6 +14,7 @@ import service.endpoint.model.DateDetails;
 import service.endpoint.model.Location;
 import service.endpoint.model.PropertyDetails;
 import service.endpoint.model.PropertyTransaction;
+import service.endpoint.repository.LastUpdatedRepository;
 import service.endpoint.repository.PropertyTransactionRepository;
 import service.endpoint.repository.PropertyTransactionStatsRepository;
 
@@ -41,6 +42,9 @@ public class PropertyTransactionControllerTest {
 
   @MockBean
   PropertyTransactionStatsRepository propertyTransactionstatsRepository;
+
+  @MockBean
+  LastUpdatedRepository lastUpdatedRepository;
 
   PropertyTransaction RECORD_1 = new PropertyTransaction(
           1L,
