@@ -40,7 +40,6 @@ public class PropertyTransactionController {
       if (allUpdates.size() == 0) throw new RuntimeException();
       return new ResponseEntity<>(allUpdates.get(0).getUpdate().getTime(), HttpStatus.OK);
     } catch (RuntimeException e) {
-      System.out.println("I am here.");
       throw new ResponseStatusException(
               HttpStatus.NOT_FOUND, "No updates found", e
       );
